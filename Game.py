@@ -66,7 +66,6 @@ def generate_level(level):
                 Tile('empty', x, y)
                 arr = Arrowleft(x, y)
                 arrow_group.add(arr)
-
     # вернем игрока, а также размер поля в клетках
     return new_player, x, y, arr
 
@@ -98,7 +97,7 @@ def terminate():
 
 
 def load_level(filename):
-    ''' '''
+    '''Загрузка уровня'''
     filename = "data/map/" + filename
     # читаем уровень, убирая символы перевода строки
     with open(filename, 'r') as mapFile:
@@ -111,6 +110,7 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
+'''Изображения игрока и спрайтов'''
 tile_images = {
     'wall': load_image('wall.png'),
     'empty': load_image('parket.png'),
@@ -125,7 +125,7 @@ tile_width = tile_height = 30
 
 
 class Arrowdown(pygame.sprite.Sprite):
-    ''''''
+    '''Класс пуль, летящих вниз'''
 
     def __init__(self, pos_x, pos_y):
         super().__init__(arrow_group, all_sprites)
@@ -136,10 +136,11 @@ class Arrowdown(pygame.sprite.Sprite):
         self.pos_y = pos_y
 
     def get_pos(self):
+        '''Функция возвращает координаты экземпляра класса'''
         return self.pos_x, self.pos_y
 
     def update(self):
-        ''''''
+        '''Обработка полёта пули'''
         self.rect.y += 2
         if "wall" in [x.get_tile_type() for x in
                       pygame.sprite.spritecollide(self, tiles_group, False)] or self.rect.y == height:
@@ -148,7 +149,7 @@ class Arrowdown(pygame.sprite.Sprite):
 
 
 class Arrowup(pygame.sprite.Sprite):
-    ''''''
+    '''Класс пуль, летящих вверх'''
 
     def __init__(self, pos_x, pos_y):
         super().__init__(arrow_group, all_sprites)
@@ -159,10 +160,11 @@ class Arrowup(pygame.sprite.Sprite):
         self.pos_y = pos_y
 
     def get_pos(self):
+        '''Функция возвращает координаты экземпляра класса'''
         return self.pos_x, self.pos_y
 
     def update(self):
-        ''''''
+        '''Обработка полёта пуль'''
         self.rect.y -= 2
         if "wall" in [x.get_tile_type() for x in
                       pygame.sprite.spritecollide(self, tiles_group, False)] or self.rect.y == 0:
@@ -171,7 +173,7 @@ class Arrowup(pygame.sprite.Sprite):
 
 
 class Arrowleft(pygame.sprite.Sprite):
-    ''''''
+    '''Класс пуль, летящих влево'''
 
     def __init__(self, pos_x, pos_y):
         super().__init__(arrow_group, all_sprites)
@@ -182,10 +184,11 @@ class Arrowleft(pygame.sprite.Sprite):
         self.pos_y = pos_y
 
     def get_pos(self):
+        '''Функция возвращает координаты экземпляра класса'''
         return self.pos_x, self.pos_y
 
     def update(self):
-        ''''''
+        '''Обработка полёта пуль'''
         self.rect.x -= 2
         if "wall" in [x.get_tile_type() for x in
                       pygame.sprite.spritecollide(self, tiles_group, False)] or self.rect.x == 0:
@@ -194,7 +197,7 @@ class Arrowleft(pygame.sprite.Sprite):
 
 
 class Arrowright(pygame.sprite.Sprite):
-    ''''''
+    '''Класс пуль, летящих вправо'''
 
     def __init__(self, pos_x, pos_y):
         super().__init__(arrow_group, all_sprites)
@@ -205,10 +208,11 @@ class Arrowright(pygame.sprite.Sprite):
         self.pos_y = pos_y
 
     def get_pos(self):
+        '''Функция возвращает координаты экземпляра класса'''
         return self.pos_x, self.pos_y
 
     def update(self):
-        ''''''
+        '''Обработка полёта пуль'''
         self.rect.x += 2
         if "wall" in [x.get_tile_type() for x in
                       pygame.sprite.spritecollide(self, tiles_group, False)] or self.rect.x == width:
@@ -217,6 +221,8 @@ class Arrowright(pygame.sprite.Sprite):
 
 
 class Tile(pygame.sprite.Sprite):
+    '''Класс клеток(стены, пола, лавы)'''
+
     def __init__(self, tile_type, pos_x, pos_y):
         self.pos_x = pos_x
         self.tile_type = tile_type
@@ -227,18 +233,21 @@ class Tile(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
 
     def get_tile_type(self):
+        '''Функция возвращает название экземпляра класса'''
         return self.tile_type
 
     def get_pos(self):
+        '''Функция возвращает координаты экземпляра класса'''
         return self.pos_x, self.pos_y
 
     def del_apple(self):
+        '''Функция удаляет картинку яблока с поля'''
         self.image = tile_images['empty']
         self.tile_type = 'empty'
 
 
 class Player(pygame.sprite.Sprite):
-    ''''''
+    '''Класс игрока'''
 
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
@@ -249,9 +258,11 @@ class Player(pygame.sprite.Sprite):
         self.pos_y = pos_y
 
     def get_pos(self):
+        '''Функция возвращает координаты экземпляра класса'''
         return self.pos_x, self.pos_y
 
     def update(self, x, y):
+        '''Функция отвечает за перемещение героя'''
         self.rect.x += x
         self.rect.y += y
         if pygame.sprite.spritecollide(self, tiles_group, False)[0].get_tile_type() == 'wall':
@@ -264,12 +275,12 @@ class Player(pygame.sprite.Sprite):
             elif y < 0:
                 self.rect.y += y
 
+
 def end_screen():
-    ''''''
+    '''Конечный экран'''
     intro_text = [
         "Поздравляем!",
         "Вы прошли игру.",
-        "Задача игрока - собрать как можно больше яблок.",
         "Статистика игрока:",
         "Количество съеденых яблок - " + str(result),
         "Количество смертей - " + str(deth),
@@ -303,7 +314,7 @@ def end_screen():
 
 
 def start_screen():
-    ''''''
+    '''Начальный экран'''
     intro_text = [
         "Правила игры:",
         "В игре принимает участие один человек.",
@@ -319,7 +330,6 @@ def start_screen():
         "",
         "Для того чтобы начать игру нажмите на пробел."
     ]
-
     fon = pygame.transform.scale(load_image('1.jpg'), (width, height))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
@@ -332,9 +342,7 @@ def start_screen():
         intro_rect.x = 10
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
-
     while True:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -345,6 +353,7 @@ def start_screen():
         clock.tick(FPS)
 
 
+'''Цикл самой программы'''
 try:
     clock = pygame.time.Clock()
     start_screen()
